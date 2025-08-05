@@ -1,0 +1,148 @@
+                           Products table
+mysql> create database db14;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use db14;
+Database changed
+mysql> create table products
+    -> product_id int primary key,product_name varchar(100),category varchar(50),unit_price decimal(10,2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'product_id int primary key,product_name varchar(100),category varchar(50),unit_p' at line 2
+mysql> create table products
+    -> ;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create products table
+    -> create table products(product_id int primary key,product_name varchar(100),category varchar(50),unit_price decimal(10,2));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'products table
+create table products(product_id int primary key,product_name var' at line 1
+mysql> create table products(product_id int primary key,product_name varchar(100),category varchar(50),unit_price decimal(10,2));
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> insert into products(product_id, product_name, category, unit_price) VALUES
+    -> (101, 'Laptop', 'Electronics', 500.00),
+    -> (102, 'Smartphone', 'Electronics', 300.00),
+    -> (103, 'Headphones', 'Electronics', 30.00),
+    -> (104, 'Keyboard', 'Electronics', 20.00),
+    -> (105, 'Mouse', 'Electronics', 15.00);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+1. Retrieve all columns from the product table.
+
+mysql> select * from products;
++------------+--------------+-------------+------------+
+| product_id | product_name | category    | unit_price |
++------------+--------------+-------------+------------+
+|        101 | Laptop       | Electronics |     500.00 |
+|        102 | Smartphone   | Electronics |     300.00 |
+|        103 | Headphones   | Electronics |      30.00 |
+|        104 | Keyboard     | Electronics |      20.00 |
+|        105 | Mouse        | Electronics |      15.00 |
++------------+--------------+-------------+------------+
+5 rows in set (0.00 sec)
+
+
+2. Retrieve the product_name and unit_price from the Products table.
+
+mysql> select product_name,unit_price from products;
++--------------+------------+
+| product_name | unit_price |
++--------------+------------+
+| Laptop       |     500.00 |
+| Smartphone   |     300.00 |
+| Headphones   |      30.00 |
+| Keyboard     |      20.00 |
+| Mouse        |      15.00 |
++--------------+------------+
+5 rows in set (0.00 sec)
+
+
+3. Filter the Products table to show only products in the 'Electronics' category.
+
+mysql> select * from products where category='Electronics';
++------------+--------------+-------------+------------+
+| product_id | product_name | category    | unit_price |
++------------+--------------+-------------+------------+
+|        101 | Laptop       | Electronics |     500.00 |
+|        102 | Smartphone   | Electronics |     300.00 |
+|        103 | Headphones   | Electronics |      30.00 |
+|        104 | Keyboard     | Electronics |      20.00 |
+|        105 | Mouse        | Electronics |      15.00 |
++------------+--------------+-------------+------------+
+5 rows in set (0.01 sec)
+
+
+4. Retrieve the product_id and product_name from the Products table for products with a
+unit_price greater than $100.
+
+mysql> select product_id,product_name from products where unit_price > 100;
++------------+--------------+
+| product_id | product_name |
++------------+--------------+
+|        101 | Laptop       |
+|        102 | Smartphone   |
++------------+--------------+
+2 rows in set (0.00 sec)
+
+5.Calculate the average unit_price of products in the Products table.
+
+          mysql> select avg(unit_price) as average_price from products;
++---------------+
+| average_price |
++---------------+
+|    173.000000 |
++---------------+
+1 row in set (0.01 sec)
+6. Retrieve product_name and unit_price from the Products table with the Highest Unit Price.
+
+mysql> select product_name,unit_price from products where unit_price = (select max(unit_price) from products);
++--------------+------------+
+| product_name | unit_price |
++--------------+------------+
+| Laptop       |     500.00 |
++--------------+------------+
+1 row in set (0.00 sec)
+
+7. Retrieve the product_name and unit_price from the Products table, ordering the results by
+unit_price in descending order.
+
+mysql> select product_name,unit_price from products order by unit_price desc;
++--------------+------------+
+| product_name | unit_price |
++--------------+------------+
+| Laptop       |     500.00 |
+| Smartphone   |     300.00 |
+| Headphones   |      30.00 |
+| Keyboard     |      20.00 |
+| Mouse        |      15.00 |
++--------------+------------+
+5 rows in set (0.01 sec)
+
+8. Retrieve the product_name and unit_price from the Products table, filtering the unit_price to
+show only values between $20 and $600.
+
+mysql> select product_name,unit_price from products where unit_price between 20 and 600;
++--------------+------------+
+| product_name | unit_price |
++--------------+------------+
+| Laptop       |     500.00 |
+| Smartphone   |     300.00 |
+| Headphones   |      30.00 |
+| Keyboard     |      20.00 |
++--------------+------------+
+3 rows in set (0.00 sec)
+
+9. Retrieve the product_name and category from the Products table, ordering the results by category in ascending order.
+
+mysql> select product_name,category from products order by category asc;
++--------------+-------------+
+| product_name | category    |
++--------------+-------------+
+| Laptop       | Electronics |
+| Smartphone   | Electronics |
+| Headphones   | Electronics |
+| Keyboard     | Electronics |
+| Mouse        | Electronics |
++--------------+-------------+
+5 rows in set (0.00 sec)
+
+
