@@ -1,0 +1,332 @@
+                                                 Sales Table
+
+1. Find total quantity sold by each salesperson.
+
+     mysql> SELECT salesperson, SUM(quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY salesperson;
++-------------+----------------+
+| salesperson | total_quantity |
++-------------+----------------+
+| Alice       |              6 |
+| Bob         |              5 |
+| Charlie     |              5 |
+| David       |              5 |
+| Eve         |              6 |
++-------------+----------------+
+5 rows in set (0.00 sec)
+
+2. Find salespersons who sold more than 5 items in total.
+     
+     mysql> SELECT salesperson, SUM(quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY salesperson
+    -> HAVING SUM(quantity) > 5;
++-------------+----------------+
+| salesperson | total_quantity |
++-------------+----------------+
+| Alice       |              6 |
+| Eve         |              6 |
++-------------+----------------+
+2 rows in set (0.00 sec)
+
+3. Find number of products sold by each salesperson.
+
+     mysql> SELECT salesperson, COUNT(product) AS total_products
+    -> FROM sales
+    -> GROUP BY salesperson;
++-------------+----------------+
+| salesperson | total_products |
++-------------+----------------+
+| Alice       |              4 |
+| Bob         |              3 |
+| Charlie     |              3 |
+| David       |              2 |
+| Eve         |              3 |
++-------------+----------------+
+5 rows in set (0.00 sec)
+
+4. List regions where total sale amount exceeded $1000.
+
+mysql> SELECT Region, SUM(SaleAmount) AS total_sales
+    -> FROM sales
+    -> GROUP BY Region
+    -> HAVING SUM(SaleAmount) > 1000;
++--------+-------------+
+| Region | total_sales |
++--------+-------------+
+| North  |     1410.00 |
+| South  |     2000.00 |
+| East   |     2100.00 |
+| West   |     1200.00 |
++--------+-------------+
+4 rows in set (0.00 sec)
+
+5.Show salespersons who made more than 2 sales transactions.
+
+mysql> SELECT Salesperson, COUNT(*) AS total_transactions
+    -> FROM sales
+    -> GROUP BY Salesperson
+    -> HAVING COUNT(*) > 2;
++-------------+--------------------+
+| Salesperson | total_transactions |
++-------------+--------------------+
+| Alice       |                  4 |
+| Bob         |                  3 |
+| Charlie     |                  3 |
+| Eve         |                  3 |
++-------------+--------------------+
+4 rows in set (0.00 sec)
+
+
+6. Find total sale amount by product, and show only products that made over $500 in sales.
+
+
+mysql> SELECT Product, SUM(SaleAmount) AS total_sales
+    -> FROM sales
+    -> GROUP BY Product
+    -> HAVING SUM(SaleAmount) > 500;
++---------+-------------+
+| Product | total_sales |
++---------+-------------+
+| Laptop  |     5300.00 |
+| Monitor |      900.00 |
++---------+-------------+
+2 rows in set (0.00 sec)
+
+7. Show the total quantity sold of each product in each region.
+
+mysql> SELECT Region, Product, SUM(Quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY Region, Product;
++--------+----------+----------------+
+| Region | Product  | total_quantity |
++--------+----------+----------------+
+| North  | Laptop   |              1 |
+| South  | Mouse    |              4 |
+| North  | Monitor  |              2 |
+| East   | Keyboard |              1 |
+| South  | Monitor  |              4 |
+| North  | Mouse    |              2 |
+| East   | Laptop   |              2 |
+| West   | Laptop   |              1 |
+| West   | Mouse    |              4 |
+| South  | Keyboard |              2 |
+| North  | Keyboard |              1 |
+| South  | Laptop   |              1 |
+| East   | Mouse    |              2 |
++--------+----------+----------------+
+13 rows in set (0.00 sec)
+
+8. Find salespersons who sold more than 1 type of product.
+
+mysql> SELECT Salesperson
+    -> FROM sales
+    -> GROUP BY Salesperson
+    -> HAVING COUNT(DISTINCT Product) > 1;
++-------------+
+| Salesperson |
++-------------+
+| Alice       |
+| Bob         |
+| Charlie     |
+| David       |
+| Eve         |
++-------------+
+5 rows in set (0.00 sec)
+
+    9. Find the average quantity per product sold per region, where the average is greater than 1.
+
+   mysql> SELECT Region, Product, AVG(Quantity) AS avg_quantity
+    -> FROM sales
+    -> GROUP BY Region, Product
+    -> HAVING AVG(Quantity) > 1;
++--------+----------+--------------+
+| Region | Product  | avg_quantity |
++--------+----------+--------------+
+| South  | Mouse    |       2.0000 |
+| North  | Monitor  |       2.0000 |
+| South  | Monitor  |       2.0000 |
+| North  | Mouse    |       2.0000 |
+| East   | Laptop   |       2.0000 |
+| West   | Mouse    |       4.0000 |
+| South  | Keyboard |       2.0000 |
+| East   | Mouse    |       2.0000 |
++--------+----------+--------------+
+8 rows in set (0.00 sec)
+
+
+ 10. Show salespersons whose total sale amount is between $500 and $1500.
+
+ mysql> SELECT Salesperson, SUM(SaleAmount) AS total_sales
+    -> FROM sales
+    -> GROUP BY Salesperson
+    -> HAVING SUM(SaleAmount) BETWEEN 500 AND 1500;
++-------------+-------------+
+| Salesperson | total_sales |
++-------------+-------------+
+| Alice       |     1410.00 |
+| Bob         |     1425.00 |
+| David       |     1200.00 |
+| Eve         |      575.00 |
++-------------+-------------+
+4 rows in set (0.00 sec)
+
+11. List top-performing products (more than 3 units sold in total).
+
+mysql> SELECT Product, SUM(Quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY Product
+    -> HAVING SUM(Quantity) > 3;
++----------+----------------+
+| Product  | total_quantity |
++----------+----------------+
+| Laptop   |              5 |
+| Mouse    |             12 |
+| Monitor  |              6 |
+| Keyboard |              4 |
++----------+----------------+
+4 rows in set (0.00 sec)
+
+12. List salespersons who sold laptops.
+
+mysql> SELECT DISTINCT Salesperson
+    -> FROM sales
+    -> WHERE Product = 'Laptop';
++-------------+
+| Salesperson |
++-------------+
+| Alice       |
+| Charlie     |
+| David       |
+| Bob         |
++-------------+
+4 rows in set (0.00 sec)
+
+
+13. Find total sale amount per salesperson per region, only where it exceeds $500.
+
+mysql> SELECT Salesperson, Region, SUM(SaleAmount) AS total_sales
+    -> FROM sales
+    -> GROUP BY Salesperson, Region
+    -> HAVING SUM(SaleAmount) > 500;
++-------------+--------+-------------+
+| Salesperson | Region | total_sales |
++-------------+--------+-------------+
+| Alice       | North  |     1410.00 |
+| Bob         | South  |     1425.00 |
+| Charlie     | East   |     2100.00 |
+| David       | West   |     1200.00 |
+| Eve         | South  |      575.00 |
++-------------+--------+-------------+
+6 rows in set (0.00 sec)
+
+
+  14. Find salespersons who sold at least 2 different products in a single region.
+mysql> SELECT Salesperson, Region
+    -> FROM sales
+    -> GROUP BY Salesperson, Region
+    -> HAVING COUNT(DISTINCT Product) >= 2;
++-------------+--------+
+| Salesperson | Region |
++-------------+--------+
+| Alice       | North  |
+| Bob         | South  |
+| Charlie     | East   |
+| David       | West   |
+| Eve         | South  |
++-------------+--------+
+5 rows in set (0.00 sec)
+
+15. Find products that were sold in more than one region.
+
+mysql> SELECT Product
+    -> FROM sales
+    -> GROUP BY Product
+    -> HAVING COUNT(DISTINCT Region) > 1;
++----------+
+| Product  |
++----------+
+| Keyboard |
+| Laptop   |
+| Monitor  |
+| Mouse    |
++----------+
+4 rows in set (0.00 sec)
+
+16. Show total number of sales per product and hide products with fewer than 2 sales.
+
+mysql> SELECT Product, COUNT(*) AS total_sales
+    -> FROM sales
+    -> GROUP BY Product
+    -> HAVING COUNT(*) >= 2;
++----------+-------------+
+| Product  | total_sales |
++----------+-------------+
+| Laptop   |           4 |
+| Mouse    |           5 |
+| Monitor  |           3 |
+| Keyboard |           3 |
++----------+-------------+
+4 rows in set (0.00 sec)
+
+17. Find region-wise total quantity sold by each salesperson.
+mysql> SELECT Region, Salesperson, SUM(Quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY Region, Salesperson;
++--------+-------------+----------------+
+| Region | Salesperson | total_quantity |
++--------+-------------+----------------+
+| North  | Alice       |              6 |
+| South  | Bob         |              5 |
+| East   | Charlie     |              5 |
+| West   | David       |              5 |
+| South  | Eve         |              6 |
++--------+-------------+----------------+
+5 rows in set (0.00 sec)
+
+18. Find salespersons who made more than 3 transactions and total sales amount is over $1000.
+
+mysql> SELECT Salesperson
+    -> FROM sales
+    -> GROUP BY Salesperson
+    -> HAVING COUNT(*) > 3 AND SUM(SaleAmount) > 1000;
++-------------+
+| Salesperson |
++-------------+
+| Alice       |
++-------------+
+1 row in set (0.00 sec)
+
+  19. Find average sale amount per region and show only regions with average above $200.
+
+mysql> SELECT Region, AVG(SaleAmount) AS avg_sales
+    -> FROM sales
+    -> GROUP BY Region
+    -> HAVING AVG(SaleAmount) > 200;
++--------+------------+
+| Region | avg_sales  |
++--------+------------+
+| North  | 352.500000 |
+| South  | 333.333333 |
+| East   | 700.000000 |
+| West   | 600.000000 |
++--------+------------+
+4 rows in set (0.00 sec)
+
+20. List regions and products where more than 3 units were sold.
+
+mysql> SELECT Region, Product, SUM(Quantity) AS total_quantity
+    -> FROM sales
+    -> GROUP BY Region, Product
+    -> HAVING SUM(Quantity) > 3;
++--------+---------+----------------+
+| Region | Product | total_quantity |
++--------+---------+----------------+
+| South  | Mouse   |              4 |
+| South  | Monitor |              4 |
+| West   | Mouse   |              4 |
++--------+---------+----------------+
+3 rows in set (0.00 sec)
+
+
